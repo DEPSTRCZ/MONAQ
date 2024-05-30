@@ -35,20 +35,16 @@ class MqttConnector:
             topic_split = (msg.topic).split("/")
 
 
-            with open('data.txt', 'a') as f:
-                regex = r"/co2/|-co-"
-                if re.search(r"/co2/|-co-",msg.topic):
-                    f.write(msg.topic + "\n")
-                    print(msg.topic)
-                    print(msg.payload.decode())
-                    print(" ")
-                f.close()
+            print(msg.topic)
+            print(" ")
 
             if re.search(r"/co2/|-co-",msg.topic):
                 # Parse payload to json
                 payload = json.loads(msg.payload.decode())
                 # Get the raw sensor data
                 sensor_data = payload["uplink_message"]["decoded_payload"]["msg"].split(";")
+                if not sensor_data:
+                    print("ERROR")
                 sid,co2,temperature,humidity = sensor_data
                 # Get the location data of the sensor
                 location = payload["uplink_message"]["rx_metadata"][0]["location"]

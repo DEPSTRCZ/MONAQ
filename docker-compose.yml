@@ -45,7 +45,7 @@ services:
       DATABASE_URL: mysql://moniaq:admin@mariadb:3306/moniaq
     ports:
       - '8002:80'
-    restart: "no"
+    restart: "always"
     depends_on:
       - mariadb
 
@@ -53,7 +53,7 @@ services:
     build:
       context: ./BackEnd
       dockerfile: ./vendor/Dockerfile
-    restart: "no"
+    restart: "always"
     environment:
       DATABASE_URL: mysql://moniaq:admin@mariadb:3306/moniaq
     depends_on:

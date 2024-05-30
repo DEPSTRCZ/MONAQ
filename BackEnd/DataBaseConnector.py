@@ -48,12 +48,10 @@ class DataBaseConnector():
     def GetSensors(self):
         with Session(self.engine) as session:
             result = session.exec(select(Sensors)).all()
-            print(result)
             return result
         
 
     def GetLatestRecordFromList(self,records):
-        print(records)
         ## Returns the latest record from a list of records by "last_update"
         return max(records, key=lambda record: record.updated_at)
         
