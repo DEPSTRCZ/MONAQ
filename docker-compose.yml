@@ -10,18 +10,18 @@ services:
     depends_on:
       - fastapi
 
-  mariadb:
-    image: mariadb:latest
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: moniaq
-      MYSQL_USER: moniaq
-      MYSQL_PASSWORD: admin
-    ports:
-      - "3307:3306"
-    volumes:
-      - ./data:/var/lib/mysql
+  #mariadb:
+  #  image: mariadb:latest
+  #  restart: always
+  #  environment:
+  #    MYSQL_ROOT_PASSWORD: admin
+  #    MYSQL_DATABASE: moniaq
+  #    MYSQL_USER: moniaq
+  #    MYSQL_PASSWORD: admin
+  #  ports:
+  #    - "3307:3306"
+  #  volumes:
+  #    - ./data:/var/lib/mysql
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -33,7 +33,7 @@ services:
     ports:
       - "8001:80"
     depends_on:
-      - mariadb
+    #  - mariadb
       - fastapi
 
   fastapi:
@@ -56,5 +56,5 @@ services:
     environment:
       DATABASE_URL: mysql://moniaq:admin@mariadb:3306/moniaq
     depends_on:
-      - mariadb
+    #  - mariadb
       - fastapi
