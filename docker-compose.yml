@@ -1,9 +1,43 @@
 version: '3.8'
 
 services:
-  streamlit:
-    build: ./FrontEnd
-    container_name: streamlit_app
+  #streamlit:
+  #  build: ./FrontEnd
+  #  container_name: streamlit_app
+  #  ports:
+  #    - "8501:8501"
+
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: moniaq
+      MYSQL_USER: moniaq
+      MYSQL_PASSWORD: admin
     ports:
-      - "8501:8501"
-    
+      - "3307:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: root
+      PMA_PASSWORD: admin
+    ports:
+      - "8001:80"
+    depends_on:
+      - mariadb
+
+  fastapi:
+    build: ./BackEnd
+    environment:
+      PORT: 8000
+    ports:
+      - '8002:8000'
+    restart: "no"
+    depends_on:
+      - mariadb

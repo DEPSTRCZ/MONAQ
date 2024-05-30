@@ -1,22 +1,71 @@
-import mysql.connector
+from sqlmodel import Field, SQLModel, create_engine, Session, select
+from .models import Records,Sensors
+from datetime import datetime
+
+DATABASE_URL = "mysql://moniaq:admin@localhost:3306/moniaq"
+
+
+
 
 class DataBaseConnector():
     def __init__(self) -> None:
         # Establishing a connection to the MySQL database
-        self.connection = mysql.connector.connect(
-            host="localhost",    # Hostname of the MySQL server
-            user="moniaq",     # Username to connect to MySQL
-            password="admin", # Password for the username
-            database="moniaq" # Name of the database to connect to
-        )
+        self.engine = create_engine(DATABASE_URL)
+        SQLModel.metadata.create_all(self.engine)
+
+
     def SaveRecord(self, data):
-        # Create a new cursor
-        cursor = self.connection.cursor()
-        # SQL Insert query
-        sql = "INSERT INTO records (id, co2, temperature, humidity, loc_lat, loc_long) VALUES (NULL, %s, %s, %s, %s, %s)"
-        # Execute the query
-        cursor.execute(sql, (data["co2"], data["temperature"], data["humidity"], data["loc_lat"], data["loc_long"]))
-        # Commit the changes
-        self.connection.commit()
-        # Close the cursor
-        cursor.close()
+        with Session(self.engine) as session:
+            # Check if sensor already exists
+            result = session.exec(select(Sensors).where(Sensors.sensor_id == data["id"])).first()
+
+            # If not, create new sensor
+            if not result:
+                sensor = Sensors(sensor_id=data["id"], times_posted=1, last_update=datetime.now())
+                session.add(sensor)
+            else:
+                # If yes, update sensor
+                sensor = result
+                sensor.times_posted += 1
+                sensor.last_update = datetime.now()
+                session.add(sensor)
+
+            # Save record & commit
+            record = Records(
+                sensor_id=sensor.sensor_id,
+                co2=data["co2"], 
+                temperature=data["temperature"],
+                humidity=data["humidity"], 
+                loc_lat=data["loc_lat"], 
+                loc_long=data["loc_long"]
+            )
+
+            session.add(record)
+            session.commit()
+    
+    # Get all sensors from database
+    def GetSensors(self):
+        with Session(self.engine) as session:
+            result = session.exec(select(Sensors)).all()
+            print(result)
+            return result
+        
+
+    def GetLatestRecordFromList(self,records):
+        print(records)
+        ## Returns the latest record from a list of records by "last_update"
+        return max(records, key=lambda record: record.updated_at)
+        
+        
+
+    # Get sensor from database
+    def GetSensor(self, sensor_id):
+        with Session(self.engine) as session:
+            result = session.exec(select(Sensors).where(Sensors.sensor_id == sensor_id)).first()
+            # Sort the records by data
+            sort_by_date = sorted(result.records,key=lambda x: x.updated_at,reverse=True)
+            # Asing the sorted
+            result.records = sort_by_date[:1]
+            return result
+
+        

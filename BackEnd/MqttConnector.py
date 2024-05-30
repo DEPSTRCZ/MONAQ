@@ -1,6 +1,8 @@
 import paho.mqtt.client as mqtt
 import json
+import re
 from DataBaseConnector import DataBaseConnector
+
 
 class MqttConnector:
     def __init__(self):
@@ -32,22 +34,31 @@ class MqttConnector:
             # Parse topic & split it at /
             topic_split = (msg.topic).split("/")
 
-            if len(topic_split) > 4:
-                if topic_split[1] == "ttndata":
-                    if topic_split[4] == "co2":
-                        # Parse payload to json
-                        payload = json.loads(msg.payload.decode())
-                        # Get the raw sensor data
-                        sensor_data = payload["uplink_message"]["decoded_payload"]["msg"].split(";")
-                        sid,co2,temperature,humidity = sensor_data
-                        # Get the location data of the sensor
-                        location = payload["uplink_message"]["rx_metadata"][0]["location"]
-                        lat,long = location["latitude"],location["longitude"]
-                        # Put together an data object
-                        data = {"id":sid,"updated_at":payload["received_at"],"co2":co2,"temperature":temperature,"humidity":humidity,"loc_lat":lat,"loc_long":long}
-                        print(data)
-                        # Append to db
-                        DataBaseConnector().SaveRecord(data)
+
+            with open('data.txt', 'a') as f:
+                regex = r"/co2/|-co-"
+                if re.search(r"/co2/|-co-",msg.topic):
+                    f.write(msg.topic + "\n")
+                    print(msg.topic)
+                    print(msg.payload.decode())
+                    print(" ")
+                f.close()
+
+            if re.search(r"/co2/|-co-",msg.topic):
+                # Parse payload to json
+                payload = json.loads(msg.payload.decode())
+                # Get the raw sensor data
+                sensor_data = payload["uplink_message"]["decoded_payload"]["msg"].split(";")
+                sid,co2,temperature,humidity = sensor_data
+                # Get the location data of the sensor
+                location = payload["uplink_message"]["rx_metadata"][0]["location"]
+                lat,long = location["latitude"],location["longitude"]
+                # Put together an data object
+                data = {"id":sid,"updated_at":payload["received_at"],"co2":co2,"temperature":temperature,"humidity":humidity,"loc_lat":lat,"loc_long":long}
+                #print(data)
+                # Append to db
+                print("saved",msg.topic)
+                DataBaseConnector().SaveRecord(data)
     def run(self):
         self.mqttc.loop_forever()
 
