@@ -24,6 +24,7 @@ class SensorResponse(SQLModel):
     records: list[Records]
 
 
+
 @app.get("/")
 def read_root():
     return {}
