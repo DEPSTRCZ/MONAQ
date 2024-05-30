@@ -2,3 +2,5 @@ fastapi
 uvicorn
 sqlmodel
 mysqlclient
+paho-mqtt
+asyncio

@@ -33,11 +33,12 @@ services:
       - mariadb
 
   fastapi:
-    build: ./BackEnd
+    build: ./BackEnd/
     environment:
       PORT: 8000
+      DATABASE_URL: mysql://moniaq:admin@mariadb:3306/moniaq
     ports:
-      - '8002:8000'
+      - '8002:80'
     restart: "no"
     depends_on:
       - mariadb

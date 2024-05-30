@@ -1,8 +1,9 @@
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 from .models import Records,Sensors
 from datetime import datetime
+import os
 
-DATABASE_URL = "mysql://moniaq:admin@localhost:3306/moniaq"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 

@@ -8,9 +8,10 @@ from datetime import datetime
 
 
 
-
 app = FastAPI()
 db = DataBaseConnector()
+
+
 
 
 # Type defs
