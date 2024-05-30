@@ -22,12 +22,13 @@ class SensorResponse(SQLModel):
     records: list[Records]
 
 
+
 @app.get("/")
 def read_root():
     return {}
 
 
-@app.get("/getAllSensors",response_model=list[Sensors])
+@app.get("/getAllSensors",response_model=list[SensorResponse])
 def read_sensors():
     """
     Returns all sensors in the database in a json format.
