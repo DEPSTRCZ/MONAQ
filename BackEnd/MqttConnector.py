@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import json
 import re
-from .DataBaseConnector import DataBaseConnector
+from DataBaseConnector import DataBaseConnector
 
 
 class MqttConnector:

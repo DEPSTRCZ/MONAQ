@@ -1,9 +1,9 @@
 from typing import Union
-from fastapi import FastAPI
-from .models import Sensors,Records
-from .DataBaseConnector import DataBaseConnector
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 from datetime import datetime
+from models import Sensors,Records
+from DataBaseConnector import DataBaseConnector
+from fastapi import FastAPI
 
 
 

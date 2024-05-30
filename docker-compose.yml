@@ -1,11 +1,15 @@
 version: '3.8'
 
 services:
-  #streamlit:
-  #  build: ./FrontEnd
-  #  container_name: streamlit_app
-  #  ports:
-  #    - "8501:8501"
+  streamlit:
+    build:
+      context: ./FrontEnd
+      dockerfile: ./Streamlit/Dockerfile
+    ports:
+      - '80:80'
+    restart: "no"
+    depends_on:
+      - fastapi
 
   mariadb:
     image: mariadb:latest
@@ -33,7 +37,9 @@ services:
       - mariadb
 
   fastapi:
-    build: ./BackEnd/
+    build:
+      context: ./BackEnd
+      dockerfile: ./FastAPI/Dockerfile
     environment:
       PORT: 8000
       DATABASE_URL: mysql://moniaq:admin@mariadb:3306/moniaq
@@ -42,3 +48,14 @@ services:
     restart: "no"
     depends_on:
       - mariadb
+
+  vendor:
+    build:
+      context: ./BackEnd
+      dockerfile: ./vendor/Dockerfile
+    restart: "no"
+    environment:
+      DATABASE_URL: mysql://moniaq:admin@mariadb:3306/moniaq
+    depends_on:
+      - mariadb
+      - fastapi

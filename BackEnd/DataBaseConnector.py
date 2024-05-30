@@ -1,5 +1,5 @@
 from sqlmodel import Field, SQLModel, create_engine, Session, select
-from .models import Records,Sensors
+from models import Records,Sensors
 from datetime import datetime
 import os
 
