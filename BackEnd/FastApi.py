@@ -1,4 +1,5 @@
 from typing import Union
+from pydantic import BaseModel
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 from datetime import datetime
 from models import Sensors,Records
@@ -12,8 +13,9 @@ app = FastAPI()
 db = DataBaseConnector()
 
 
-
-
+class GetAllSensorsResponse(BaseModel):
+    count: int
+    results: list[Sensors]
 # Type defs
 class SensorResponse(SQLModel):
     sensor_id: int
@@ -27,13 +29,17 @@ def read_root():
     return {}
 
 
-@app.get("/getAllSensors",response_model=list[Sensors])
+@app.get("/getAllSensors",response_model=GetAllSensorsResponse)
 def read_sensors():
     """
     Returns all sensors in the database in a json format.
     """
+    response = dict()
     results = db.GetSensors()
-    return results
+    response["count"] = len(results)
+    response["results"] = results
+
+    return response
 
 
 @app.get("/getSensor/{sensor_id}",response_model=SensorResponse)
