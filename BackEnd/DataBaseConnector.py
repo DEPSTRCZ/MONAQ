@@ -69,9 +69,9 @@ class DataBaseConnector():
         with Session(self.engine) as session:
             result = session.exec(select(Sensors).where(Sensors.sensor_id == sensor_id)).first()
             # Sort the records by data
-            sort_by_date = sorted(result.records,key=lambda x: x.updated_at,reverse=True)
+            #sort_by_date = sorted(result.records,key=lambda x: x.updated_at,reverse=True)
             # Asing the sorted
-            result.records = sort_by_date[:1]
+            #result.records = sort_by_date[:1]
             return result
 
         
