@@ -72,6 +72,7 @@ class DataBaseConnector():
             #sort_by_date = sorted(result.records,key=lambda x: x.updated_at,reverse=True)
             # Asing the sorted
             #result.records = sort_by_date[:1]
+            result.records
             return result
 
         

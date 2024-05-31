@@ -43,4 +43,5 @@ def read_sensors(sensor_id: int):
     Return sensor by id {sensor_id} in a json format.
     """
     sensor = db.GetSensor(sensor_id)
+
     return sensor
