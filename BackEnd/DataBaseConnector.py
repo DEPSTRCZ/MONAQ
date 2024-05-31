@@ -2,6 +2,8 @@ from sqlmodel import Field, SQLModel, create_engine, Session, select
 from models import Records,Sensors
 from datetime import datetime
 import os
+from sqlalchemy.orm import selectinload
+
 
 
 
@@ -49,7 +51,10 @@ class DataBaseConnector():
     # Get all sensors from database
     def GetSensors(self):
         with Session(self.engine) as session:
-            result = session.exec(select(Sensors).options(selectinload(Sensors.records))).all()
+            result = session.exec(
+                        select(Sensors).options(selectinload(Sensors.records))
+                    ).all()
+
             return result
         
 

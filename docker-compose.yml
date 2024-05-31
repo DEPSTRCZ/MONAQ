@@ -23,18 +23,18 @@ services:
   #  volumes:
   #    - ./data:/var/lib/mysql
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    restart: always
-    environment:
-      PMA_HOST: mariadb
-      PMA_USER: root
-      PMA_PASSWORD: admin
-    ports:
-      - "8001:80"
-    depends_on:
+  #phpmyadmin:
+    #image: phpmyadmin/phpmyadmin
+    #restart: always
+    #environment:
+    #  PMA_HOST: mariadb
+    #  PMA_USER: root
+    #  PMA_PASSWORD: admin
+    #ports:
+    #  - "8001:80"
+    #depends_on:
     #  - mariadb
-      - fastapi
+    #  - fastapi
 
   fastapi:
     build:

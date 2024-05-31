@@ -35,8 +35,8 @@ class MqttConnector:
             topic_split = (msg.topic).split("/")
 
 
-            print(msg.topic)
-            print(" ")
+            #print(msg.topic)
+            #print(" ")
 
             if re.search(r"/co2/|-co-",msg.topic):
                 # Parse payload to json
