@@ -21,19 +21,20 @@ class SensorResponse(SQLModel):
     last_update: datetime
     records: list[Records]
 
+class GetAllSensorsResponse(SQLModel):
+    count: int
+    sensors: list[SensorResponse]
 
-@app.get("/")
-def read_root():
-    return {}
-
-print("x")
-@app.get("/getAllSensors",response_model= list[SensorResponse])
+@app.get("/getAllSensors",response_model=GetAllSensorsResponse)
 def read_sensors():
     """
     Returns all sensors in the database in a json format.
     """
     results = db.GetSensors()
-    return results
+    response = dict()
+    response["count"] = len(results)
+    response["sensors"] = results
+    return response
 
 
 @app.get("/getSensor/{sensor_id}",response_model=SensorResponse)

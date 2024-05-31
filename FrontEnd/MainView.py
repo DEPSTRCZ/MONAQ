@@ -9,11 +9,19 @@ st.title("MONAQ")
 def GetLatestRecordFromList(records):
     return records[-1]
 
+def SensorCard(sensor_id,sensor,st):
+    with st.container(border=True):
+        st.header(f"Senzor: {sensor_id}")  # Display specific columns
+        st.text(f"Teplota: {sensor['temperature']}")  # Display specific columns
+        st.text(f"Vlhkost: {sensor['humidity']}")  # Display specific columns
+        st.text(f"CO2: {sensor['co2']}")  # Display specific columns
+        st.button("Otevřít",key=sensor_id, use_container_width=True)
+
 try:
     data = requests.get("http://fastapi:8085/getAllSensors")
     
     data_json = data.json()
-    df_raw = pd.DataFrame().from_dict(data_json)
+    df_raw = pd.DataFrame().from_dict(data_json["sensors"])
     latest_records = df_raw["records"].apply(GetLatestRecordFromList)
     extracted = latest_records.apply(pd.Series)
     extracted.set_index("sensor_id",inplace=True)
@@ -25,8 +33,6 @@ try:
 
     unique_sorted_records = sorted_records.drop_duplicates(subset=['loc_lat', 'loc_long'], keep='last')
     
-
-    
     px.set_mapbox_access_token(open(".mapbox").read())
     fig = px.scatter_mapbox(unique_sorted_records, lat="loc_lat", lon="loc_long", color="co2",color_continuous_scale=px.colors.cyclical.IceFire, size="static_size",zoom=2)
 
@@ -35,32 +41,24 @@ try:
     st.plotly_chart(fig)
     st.divider()
     st.title("Senzory")
-    L, M, R = st.columns([5,5,5])
-    st.write(sorted_records)
-    for index, row in sorted_records.iterrows():  # Iterate over rows
-        if index % 3 == 0:  # Place in left column (every 3rd row)
-            with L:
-                with st.container(border=True):
-                    st.header(f"Senzor: {index}")  # Display specific columns
-                    st.text(f"Teplota: {row['temperature']}")  # Display specific columns
-                    st.text(f"Vlhkost: {row['humidity']}")  # Display specific columns
-                    st.text(f"CO2: {row['co2']}")  # Display specific columns
+    num_columns = 3
+    total_records = len(sorted_records)
+    ideal_records_per_col = total_records // num_columns
+    extra_records_cols = total_records % num_columns
 
-        elif index % 3 == 1:  # Place in middle column (every 2nd row)
-            with M:
-                with st.container(border=True):
-                    st.title(f"Senzor: {index}")  # Display specific columns
-                    st.text(f"Teplota: {row['temperature']}")  # Display specific columns
-                    st.text(f"Vlhkost: {row['humidity']}")  # Display specific columns
-                    st.text(f"CO2: {row['co2']}")  # Display specific columns
-        else:  # Place in right column (remaining rows)
-            with R:
-                with st.container(border=True):
-                    st.title(f"Senzor: {index}")  # Display specific columns
-                    st.text(f"Teplota: {row['temperature']}")  # Display specific columns
-                    st.text(f"Vlhkost: {row['humidity']}")  # Display specific columns
-                    st.text(f"CO2: {row['co2']}")  # Display specific columns
-    
+    L, M, R = st.columns([5, 5, 5])
+
+    column_index = 0
+    for index, row in sorted_records.iterrows():
+        if column_index < extra_records_cols:
+            with (L if column_index == 0 else M if column_index == 1 else R):
+                SensorCard(index,row,st)
+        else:
+            with (L if column_index % num_columns == 0 else M if column_index % num_columns == 1 else R):
+                SensorCard(index,row,st)
+        column_index += 1
+        if column_index == num_columns:
+            column_index = 0
 
 except Exception as e:
     st.write("error",e)
