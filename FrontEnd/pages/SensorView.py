@@ -15,25 +15,36 @@ try:
     data = responce.json()
     df = pd.DataFrame().from_dict(data)
     df = df["records"].apply(pd.Series)
+    df["updated_at"] = pd.to_datetime(df["updated_at"])
+    df[["humidity", "loc_lat", "loc_long", "temperature",]] = df[["humidity", "loc_lat", "loc_long", "temperature",]].astype(float)
+    df["result"] = df["humidity"] - df["humidity"]
+
+    df = df.sort_values(by="updated_at", ascending=False)
+    dfNew = df.head(2)
+    first = dfNew["humidity"].head(1)
+    last = dfNew["humidity"].tail(1)
+    st.write("dfn",dfNew)
+    st.write(first-last)
     st.write(df)
 except Exception as e:
     st.write(e)
+DeltaH = first["humidity"] - last["humidity"]
+#if DeltaH == None:
+#    DeltaH = 0 
 
-SoTD = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-# SoTD = Screams Of The Damned
+st.write(DeltaH)
+
 st.header(" ", divider="rainbow")
-
-deltaH = 10
 
 L, M, R = st.columns([2,5,2])
 #humid and temp is an object thats supposed to be the humidity and Temperature of the sensor.
 with L:
     with st.container(border=True):
-        st.metric(label="Humidity", value=df["humidity"], delta="-50 %")
+        st.metric(label="Humidity", value=first["humidity"], delta=DeltaH)
 
 with M:
     with st.container(border=True):
-        st.image("https://i.pinimg.com/736x/b3/1e/e3/b31ee3988b009d32478769af874f8a4d.jpg")
+        st.image("https://i.pinimg.com/736x/b3/1e/e3/b31ee3988b009d32478769af874f8a4d.jpg") 
         with st.container(border=True):
             st.metric(label="CO₂", value="5'000 ppm", delta="+4'000 ppm", delta_color="inverse")
         with st.container(border=True):
