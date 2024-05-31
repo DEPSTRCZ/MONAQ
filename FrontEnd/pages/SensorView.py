@@ -23,7 +23,7 @@ SoTD = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 # SoTD = Screams Of The Damned
 st.header(" ", divider="rainbow")
 
-deltaH = 
+deltaH = 10
 
 L, M, R = st.columns([2,5,2])
 #humid and temp is an object thats supposed to be the humidity and Temperature of the sensor.
