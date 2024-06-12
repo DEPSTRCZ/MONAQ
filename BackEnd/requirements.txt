@@ -4,3 +4,4 @@ sqlmodel
 mysqlclient
 paho-mqtt
 asyncio
+pandas
