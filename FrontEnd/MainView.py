@@ -20,18 +20,24 @@ def SensorCard(sensor_id,sensor,st):
 try:
     data = requests.get("http://fastapi:8085/getAllSensors")
     
-    data_json = data.json()
-    df_raw = pd.DataFrame().from_dict(data_json["sensors"])
+    try:
+        data_json = data.json()
+        df_raw = pd.DataFrame().from_dict(data_json["sensors"])
+    except:
+        st.warning("Nastala chyba")
+        df_raw = pd.DataFrame()
     latest_records = df_raw["records"].apply(GetLatestRecordFromList)
     extracted = latest_records.apply(pd.Series)
     extracted.set_index("sensor_id",inplace=True)
-    sorted_records = extracted.sort_values(by=['updated_at',"sensor_id"])
+    extracted["updated_at"] = pd.to_datetime(extracted["updated_at"])
+    extracted = extracted.sort_values(by=['updated_at'],ascending=False)
+    st.dataframe(extracted)
     
-    sorted_records["loc_lat"] = sorted_records["loc_lat"].astype(float)
-    sorted_records["loc_long"] = sorted_records["loc_long"].astype(float)
-    sorted_records["static_size"] = 0.2
+    extracted["loc_lat"] = extracted["loc_lat"].astype(float)
+    extracted["loc_long"] = extracted["loc_long"].astype(float)
+    extracted["static_size"] = 0.05
 
-    unique_sorted_records = sorted_records.drop_duplicates(subset=['loc_lat', 'loc_long'], keep='last')
+    unique_sorted_records = extracted.drop_duplicates(subset=['loc_lat', 'loc_long'], keep='last')
     
     px.set_mapbox_access_token(open(".mapbox").read())
     fig = px.scatter_mapbox(unique_sorted_records, lat="loc_lat", lon="loc_long", color="co2",color_continuous_scale=px.colors.cyclical.IceFire, size="static_size",zoom=2)
@@ -42,14 +48,14 @@ try:
     st.divider()
     st.title("Senzory")
     num_columns = 3
-    total_records = len(sorted_records)
+    total_records = len(extracted)
     ideal_records_per_col = total_records // num_columns
     extra_records_cols = total_records % num_columns
 
     L, M, R = st.columns([5, 5, 5])
 
     column_index = 0
-    for index, row in sorted_records.iterrows():
+    for index, row in extracted.iterrows():
         if column_index < extra_records_cols:
             with (L if column_index == 0 else M if column_index == 1 else R):
                 SensorCard(index,row,st)

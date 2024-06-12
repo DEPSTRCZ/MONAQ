@@ -11,7 +11,16 @@ sensor = "Sensor: 0"
 st.markdown(sensor)
 st.sidebar.markdown(sensor)
 try:
-    responce = rq.get("http://fastapi:8085/getSensor/2")
+    st.write(st.query_params)
+    st.write("id" in st.query_params)
+    if "id" in st.query_params:
+        query_sensor_id = st.query_params["id"]
+    else:
+        st.error("Nebyl vybrán žádný senzor.")
+        st.stop()
+    st.write(query_sensor_id)
+    responce = rq.get(f"http://fastapi:8085/getSensor/{query_sensor_id}")
+    st.write(responce.content)
     data = responce.json()
     df = pd.DataFrame().from_dict(data)
     df = df["records"].apply(pd.Series)
@@ -35,6 +44,8 @@ DeltaH = first["humidity"] - last["humidity"]
 st.write(DeltaH)
 
 st.header(" ", divider="rainbow")
+
+deltaH = 10
 
 L, M, R = st.columns([2,5,2])
 #humid and temp is an object thats supposed to be the humidity and Temperature of the sensor.
