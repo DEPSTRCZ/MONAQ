@@ -41,7 +41,7 @@ services:
       context: ./BackEnd
       dockerfile: ./FastAPI/Dockerfile
     environment:
-      DATABASE_URL: mysql://u376_WOWetOUnOj:REDACTED@REDACTED:3306/s376_moniaq
+      DATABASE_URL: mysql://REDACTED:REDACTED@REDACTED:3306/s376_moniaq
     ports:
       - '8002:8085'
     restart: "always"
@@ -54,7 +54,7 @@ services:
       dockerfile: ./Vendor/Dockerfile
     restart: "always"
     environment:
-      DATABASE_URL: mysql://u376_WOWetOUnOj:REDACTED@REDACTED:3306/s376_moniaq
+      DATABASE_URL: mysql://REDACTED:REDACTEDq@REDACTED:3306/s376_moniaq
     depends_on:
     #  - mariadb
       - fastapi
