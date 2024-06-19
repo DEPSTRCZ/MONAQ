@@ -87,7 +87,7 @@ class DataBaseConnector():
             session.commit()
     
     # Get all sensors from database
-    def GetSensors(self, limit=None):
+    def GetSensors(self, limitq=None):
         """
         Retrieves all sensors from the database along with their associated records.
 
@@ -103,7 +103,7 @@ class DataBaseConnector():
             )
             
             statement = (
-                select(Records)
+                select(Records).limit(limitq)
                 .join(subquery, onclause=(Records.sensor_id == subquery.c.sensor_id) & 
                                     (Records.updated_at == subquery.c.max_updated_at))
             )
@@ -120,6 +120,7 @@ class DataBaseConnector():
 
         Args:
             sensor_id (int): The ID of the sensor to retrieve.
+            limit (int, optional): The maximum number of records to retrieve for the sensor. Defaults to None.
 
         Returns:
             Sensors: The sensor object matching the provided sensor ID, or None if no matching sensor is found.

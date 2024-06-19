@@ -6,9 +6,6 @@ import plotly.graph_objects as go
 st.set_page_config(page_title="MONAQ", page_icon="📈")
 st.title("MONAQ")
 
-def GetLatestRecordFromList(records):
-    return records[-1]
-
 def SensorCard(sensor_id,sensor,st):
     """
     Renders a card with information about a sensor.
@@ -21,12 +18,13 @@ def SensorCard(sensor_id,sensor,st):
     Returns:
         None
 """
-    if sensor["co2"] < 1000:
+    if 400 <= sensor["co2"] <= 1000:
         status = "V pořádku"
-    elif sensor["co2"] < 1500:
+    elif 1000 <= sensor["co2"] < 2000:
         status = "Vydýcháno"
-    else:
+    elif sensor["co2"] > 2000:
         status = "Špatná, Otevřte Okna"
+    # source: https://www.co2meter.com/blogs/news/carbon-dioxide-indoor-levels-chart
     with st.container(border=True):
         st.header(f"Senzor: {sensor_id}")
         st.text(f"Status: {status}")
@@ -42,10 +40,9 @@ try:
         data = requests.get("http://fastapi:8085/getAllSensors")
         data_json = data.json()
         df_raw = pd.DataFrame().from_dict(data_json["sensors"])
-        st.write(df_raw)
     except:
         # If there is an error return empty dataframe
-        st.warning("Nastala chyba")
+        st.error("Nastala chyba")
         df_raw = pd.DataFrame()
     # Convert records to dataframe
 
@@ -76,6 +73,7 @@ try:
     extra_records_cols = total_records % num_columns
 
     L, M, R = st.columns([5, 5, 5])
+
 
     column_index = 0
     for index, row in sorted_df.iterrows():
