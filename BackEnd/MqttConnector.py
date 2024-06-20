@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 import json
 import re
 from DataBaseConnector import DataBaseConnector
-
+import os
 
 class MqttConnector:
     def __init__(self):
@@ -17,10 +17,10 @@ class MqttConnector:
         Returns:
             None
         """
-        USERNAME = "REDACTED"
-        PASSWORD = "REDACTED"
-        SERVER = "REDACTED"
-        PORT = 8883
+        USERNAME = os.getenv("MQTT_USERNAME")
+        PASSWORD = os.getenv("MQTT_PASSWORD")
+        SERVER = os.getenv("MQTT_HOST")
+        PORT = int(os.getenv("MQTT_PORT"))
 
         self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
         self.mqttc.on_connect = self.on_connect

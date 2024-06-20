@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import os
 st.set_page_config(page_title="MONAQ", page_icon="📈")
 st.title("MONAQ")
 
@@ -59,7 +60,7 @@ try:
 
     unique_sorted_records = sorted_df.drop_duplicates(subset=['loc_lat', 'loc_long'], keep='last')
     
-    px.set_mapbox_access_token(open(".mapbox").read())
+    px.set_mapbox_access_token(os.getenv("MAPBOX_TOKEN"))
     fig = px.scatter_mapbox(unique_sorted_records, lat="loc_lat", lon="loc_long", color="co2",color_continuous_scale=px.colors.cyclical.IceFire,zoom=2)
 
     st.divider()

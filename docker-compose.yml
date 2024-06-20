@@ -12,7 +12,7 @@ services:
 
   #mariadb:
   #  image: mariadb:latest
-  #  restart: always
+  #  restart: alwayss
   #  environment:
   #    MYSQL_ROOT_PASSWORD: admin
   #    MYSQL_DATABASE: moniaq
