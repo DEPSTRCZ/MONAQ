@@ -3,6 +3,9 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.8%2B-brightgreen.svg)
 ![Docker](https://img.shields.io/badge/docker-ready-blue)
+---
+## ⚠🌐[Česká Verze ZDE!](https://github.com/DEPSTRCZ/MONAQ/blob/main/README_cz.md)
+---
 
 A small backend system for collecting, storing, and displaying air quality data from sensors that use MQTT. This project provides a RESTful API to serve sensor data and is flexible enough to support any frontend, currently implemented using Streamlit.
 
@@ -17,13 +20,10 @@ A small backend system for collecting, storing, and displaying air quality data 
 - [Setup Instructions](#setup-instructions)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
-- [Usage](#usage)
-  - [Running the Server](#running-the-server)
-  - [API Endpoints](#api-endpoints)
+  - [Running](#running)
+- [API Endpoints](#api-endpoints)
 - [Frontend](#frontend)
-- [Docker Support](#docker-support)
-- [Contributing](#contributing)
-- [License](#license)
+
 
 ## Screenshots
 ![MainPage](https://github.com/DEPSTRCZ/MONAQ/assets/77269898/2b8d9c0a-733b-4802-bdc7-c686d554744c)
@@ -85,9 +85,6 @@ A small backend system for collecting, storing, and displaying air quality data 
   - Run/Import the `sample-data.sql`
   > That can be done using HeidiSQL, DBeaver (Or the included PhpMyAdmin that can be enabled in `docker-compose.yml`
 
-  > [!TIP]
-  > You can also uncomment phpmyadmin to make importing the DB easier.
-
 ## Running
 ```bash
 docker-compose up --build
@@ -96,6 +93,67 @@ docker-compose up --build
 > Thats it! The project should be available:
 - [FrontEnd](http://localhost)
 - [FastAPI Swagger UI](https://localhost:8002/docs)
+
+## API Endpoints
+- `http://localhost:8002/getAllSensors` Fetches all sensors from the database along with their latest data.
+```json
+{
+  "count": 2,
+  "sensors": [
+    {
+      "temperature": "28.00",
+      "updated_at": "2024-05-28T11:42:46",
+      "sensor_id": 1,
+      "co2": 852,
+      "humidity": "43.00",
+      "loc_lat": "0.000000",
+      "loc_long": "0.000000"
+    },
+    {
+      "temperature": "26.70",
+      "updated_at": "2024-05-29T12:12:58",
+      "sensor_id": 2,
+      "co2": 724,
+      "humidity": "40.00",
+      "loc_lat": "0.000000",
+      "loc_long": "0.000000"
+    }
+  ]
+}
+```
+
+- `http://localhost:8002/getSensor/{id}` Fetches information about specified sensor.
+```json
+{
+  "sensor_id": 1,
+  "times_posted": 1,
+  "last_update": "2024-06-20T15:15:36",
+  "records": [
+    {
+      "sensor_id": 1,
+      "id": 25423,
+      "co2": 1891,
+      "humidity": "36.00",
+      "loc_lat": "0.000000",
+      "loc_long": "0.000000",
+      "temperature": "28.50",
+      "updated_at": "2024-06-20T15:15:36"
+    }
+  ]
+}
+```
+
+- `http://localhost:8002/getQualityInfo/{id}` Fetches quality information from specified sensor. Including deltas.
+```json
+{
+  "humidity": "36.0",
+  "temperature": "28.5",
+  "co2": 1915,
+  "delta_co2": 24,
+  "delta_humidity": "0.0",
+  "delta_temperature": "0.0"
+}
+```
 
 ## Frontend
 
