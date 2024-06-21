@@ -70,6 +70,7 @@ A small backend system for collecting, storing, and displaying air quality data 
 2. **Configure Docker-Compose**:
 
    Rename the `example-docker-compose.yml` to `docker-compose.yml`.
+   Fill in all the enviroment variables.
 
    If wanted uncomment the MariaDB section for MariaDB server that can be used. (Follow step 2.1)
 
@@ -82,7 +83,10 @@ A small backend system for collecting, storing, and displaying air quality data 
 2.1. **Setting up sample data for database.**:
   - Connect to your database.
   - Run/Import the `sample-data.sql`
-  > That can be odne using HeidiSQL, DBeaver (Or the included PhpMyAdmin that can be enabled in `docker-compose.yml`
+  > That can be done using HeidiSQL, DBeaver (Or the included PhpMyAdmin that can be enabled in `docker-compose.yml`
+
+  > [!TIP]
+  > You can also uncomment phpmyadmin to make importing the DB easier.
 
 ## Running
 ```bash
