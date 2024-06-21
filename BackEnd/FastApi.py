@@ -1,6 +1,6 @@
 from decimal import Decimal
 from typing import Union
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from models import Records
 from DataBaseConnector import DataBaseConnector
@@ -62,7 +62,11 @@ def read_sensors(sensor_id: int, limit: Union[int, None] = None):
     """
     sensor = db.GetSensor(sensor_id, limit)
 
-    return sensor
+    # if no sensor is found return 404
+    if not sensor:
+        raise HTTPException(status_code=404, detail="Sensor not found")
+    else:
+        return sensor
 
 @app.get("/getQualityInfo/{sensor_id}",response_model=GetQualityInfo)
 def get_quality_info(sensor_id: int):

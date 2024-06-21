@@ -137,6 +137,10 @@ class DataBaseConnector():
                 .order_by(Records.updated_at.desc())
             ).first()
 
+            # check if sensor exists
+            if not result:
+                return None
+
             # Call lazy query & oderder record starting from latest
             result.records = session.exec(
                 select(Records)

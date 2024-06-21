@@ -20,7 +20,11 @@ except:
     st.error("Nastala chyba")
     df = pd.DataFrame()
 
-
+# Check if data is empty
+if df.empty:
+    st.error("Nepodařilo se načíst data nebo jsou prázdná.")
+    st.stop()
+    
 # Convert df to datetime
 df["updated_at"] = pd.to_datetime(df["updated_at"])
 

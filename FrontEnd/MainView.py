@@ -45,8 +45,12 @@ try:
         # If there is an error return empty dataframe
         st.error("Nastala chyba")
         df_raw = pd.DataFrame()
-    # Convert records to dataframe
 
+    # check if data is empty
+    if df_raw.empty:
+        st.error("Nepodařilo se načíst data nebo jsou prázdná.")
+        st.stop()
+    # Set sensor_id as index
     df_raw.set_index("sensor_id",inplace=True)
     # Convert timestamp to datetime
     df_raw["updated_at"] = pd.to_datetime(df_raw["updated_at"])
