@@ -2,28 +2,27 @@
 > Monitorování kvality ovzduší [MONAQ]
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Python](https://img.shields.io/badge/python-3.8%2B-brightgreen.svg)
+![Python](https://img.shields.io/badge/python-3.12%2B-brightgreen.svg)
 ![Docker](https://img.shields.io/badge/docker-ready-blue)
 
 Malý backendový systém pro sběr, ukládání a zobrazování dat o kvalitě ovzduší ze senzorů využívajících MQTT. Tento projekt poskytuje rozhraní RESTful API pro obsluhu dat ze senzorů a je dostatečně flexibilní, aby podporoval libovolný frontend, v současné době implementovaný pomocí knihovny Streamlit.
-> [!NOTE]
+
 > Tento projekt vznikl v rámci dvoutýdenní "praxe" v [Datovém centru ústeckého kraje](https://dcuk.cz/) s využitím datové platformy [Portabo](https://www.portabo.org/).
+
+> [!NOTE]
+> Mějte na paměti, že tento projekt byl vytvořen během dvou týdnů, takže čas byl trochu tlačící. Některé části nebo kód mohly být napsány/udělány lépe.
 
 ## Obsah
 
-- [Screenshots](#screenshots)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Setup Instructions](#setup-instructions)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-  - [Running the Server](#running-the-server)
-  - [API Endpoints](#api-endpoints)
+- [Ukázky](#ukázka)
+- [Funkce](#funkce)
+- [Použité technologie](#použité-technologie)
+- [Pokyny k spuštění](#pokyny-k-spuštění)
+  - [Předpoklady](#předpoklady)
+  - [Instalace](#instalace)
+  - [Spuštění](#spuštění)
+- [API Endpointy](#api-endpointy)
 - [Frontend](#frontend)
-- [Docker Support](#docker-support)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Ukázka
 ![MainPage](https://github.com/DEPSTRCZ/MONAQ/assets/77269898/2b8d9c0a-733b-4802-bdc7-c686d554744c)
@@ -67,7 +66,7 @@ Malý backendový systém pro sběr, ukládání a zobrazování dat o kvalitě 
    cd MONAQ
    ```
 
-2. **Konfigurace Docker-Compos**:
+2. **Konfigurace Docker-Compose**:
 
    Přejmenujte soubor `example-docker-compose.yml` na `docker-compose.yml`.
    Vyplňte všechny proměnné prostředí.
@@ -94,7 +93,68 @@ docker-compose up --build
 - [FrontEnd](http://localhost)
 - [FastAPI Swagger UI](https://localhost:8002/docs)
 
+## API Endpointy
+- `http://localhost:8002/getAllSensors` Načte všechny senzory z databáze spolu s jejich nejnovějšími daty.
+```json
+{
+  "count": 2,
+  "sensors": [
+    {
+      "temperature": "28.00",
+      "updated_at": "2024-05-28T11:42:46",
+      "sensor_id": 1,
+      "co2": 852,
+      "humidity": "43.00",
+      "loc_lat": "0.000000",
+      "loc_long": "0.000000"
+    },
+    {
+      "temperature": "26.70",
+      "updated_at": "2024-05-29T12:12:58",
+      "sensor_id": 2,
+      "co2": 724,
+      "humidity": "40.00",
+      "loc_lat": "0.000000",
+      "loc_long": "0.000000"
+    }
+  ]
+}
+```
+
+- `http://localhost:8002/getSensor/{id}` Načte informace o zadaném senzoru.
+```json
+{
+  "sensor_id": 1,
+  "times_posted": 1,
+  "last_update": "2024-06-20T15:15:36",
+  "records": [
+    {
+      "sensor_id": 1,
+      "id": 25423,
+      "co2": 1891,
+      "humidity": "36.00",
+      "loc_lat": "0.000000",
+      "loc_long": "0.000000",
+      "temperature": "28.50",
+      "updated_at": "2024-06-20T15:15:36"
+    }
+  ]
+}
+```
+
+- `http://localhost:8002/getQualityInfo/{id}` Stáhne informace o kvalitě ze zadaného senzoru. Včetně rozdílů.
+```json
+{
+  "humidity": "36.0",
+  "temperature": "28.5",
+  "co2": 1915,
+  "delta_co2": 24,
+  "delta_humidity": "0.0",
+  "delta_temperature": "0.0"
+}
+```
+
 ## Frontend
 
-Současný frontend je implementován pomocí aplikace Streamlit.
+Současný frontend je implementován pomocí knihovny Streamlit.
 BackEnd byl vytvořen převážně flexibilní. Měl by tedy fungovat s jakýmkoli backendem.
