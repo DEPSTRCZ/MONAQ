@@ -52,18 +52,18 @@ services:
 #    depends_on:
     #  - mariadb
 
-  vendor:
-    build:
-      context: ./BackEnd
-      dockerfile: ./Vendor/Dockerfile
-    restart: "always"
-    environment:
-      DATABASE_URL: mysql://USER:PASSWORD@IP:3306/DB
-      MQTT_HOST: mqtt.example.com
-      MQTT_USERNAME: username
-      MQTT_PASSWORD: pass
-      MQTT_PORT: 8883
-    depends_on:
+  #vendor:
+  #  build:
+  #    context: ./BackEnd
+  #    dockerfile: ./Vendor/Dockerfile
+  #  restart: "always"
+  #  environment:
+  #    DATABASE_URL: mysql://USER:PASSWORD@IP:3306/DB
+  #    MQTT_HOST: mqtt.example.com
+  #    MQTT_USERNAME: username
+  #    MQTT_PASSWORD: pass
+  #    MQTT_PORT: 8883
+  #  depends_on:
     #  - mariadb
-      - fastapi
+  #    - fastapi
     
