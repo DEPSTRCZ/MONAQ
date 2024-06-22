@@ -1,7 +1,7 @@
 # Air Quality Monitoring System [MONAQ]
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Python](https://img.shields.io/badge/python-3.8%2B-brightgreen.svg)
+![Python](https://img.shields.io/badge/python-3.12%2B-brightgreen.svg)
 ![Docker](https://img.shields.io/badge/docker-ready-blue)
 ---
 ## ⚠🌐[Česká Verze ZDE!](https://github.com/DEPSTRCZ/MONAQ/blob/main/README_cz.md)
