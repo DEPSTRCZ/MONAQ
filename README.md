@@ -9,7 +9,7 @@
 
 A small backend system for collecting, storing, and displaying air quality data from sensors that use MQTT. This project provides a RESTful API to serve sensor data and is flexible enough to support any frontend, currently implemented using Streamlit.
 
-> This project was made as part of 2-Wekk "internship" at [Datové centrum ústeckého kraje](https://dcuk.cz/) utilizing the data platform called [Portabo](https://www.portabo.org/)
+> This project was made as part of 2-Week "internship" at [Datové centrum ústeckého kraje](https://dcuk.cz/) utilizing the data platform called [Portabo](https://www.portabo.org/)
 
 > [!NOTE]
 > Keep in mind that this was done in two weeks, so time was a bit pressing. Some parts or code could have been written/done better.
